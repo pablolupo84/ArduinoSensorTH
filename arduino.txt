@@ -1,0 +1,46 @@
+#include "DHT.h"
+ 
+#define DHTPIN 2     // Pin al que conectamos el sensor DHT
+ 
+// Descomenta el modelo de DTH que estes usando
+ 
+//#define DHTTYPE DHT11   // DHT 11
+#define DHTTYPE DHT22   // DHT 22  (AM2302), AM2321
+//#define DHTTYPE DHT21   // DHT 21 (AM2301)
+ 
+ 
+DHT dht(DHTPIN, DHTTYPE);
+ 
+void setup() {
+  Serial.begin(9600);
+  //Serial.println("Comienzo de las lecturas");
+  dht.begin();
+}
+ 
+void loop() {
+  // Tiempo entre lecturas.
+  delay(2000);
+  // El tiempo para las lecturas necesita sobre 250ms (sensores nuevos)
+  
+  // Lee la humedad y la almacena en la variable "h"
+  float h = dht.readHumidity();
+  // Lee la temperatura (grados celsius) y la almacena en la variable "t"
+  float t = dht.readTemperature();
+  // Lee la temperatura (Fahrenheit) y la almacena en la variable "f"
+  float f = dht.readTemperature(true);
+ 
+  // Comprueba si alguna de las lecturas a fallado (repite las lecturas).
+  if (isnan(h) || isnan(t) || isnan(f)) {
+    Serial.println("Fallo al leer el Sensor");
+    return;
+  }
+   
+  // Muestra en el monitor serie las lecturas
+  Serial.print(h);
+  Serial.print(" ");
+  Serial.print(t);
+  Serial.print(" ");
+  Serial.print(f);
+  Serial.print('\n');
+  //Serial.println(); //esta linea agrega el salto de linea
+}
